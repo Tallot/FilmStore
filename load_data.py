@@ -42,7 +42,6 @@ def unpack(archive_names):
 def prepare_init_data(records_limit=10000):
     print('Preparing data...')
     films = []
-    os.makedirs('init-db', exist_ok=True)
 
     # open files
     basics = open('title.basics.tsv')
@@ -72,6 +71,7 @@ def prepare_init_data(records_limit=10000):
         if crew_row[1] == '\\N':
             continue
 
+        # future db collection
         film_dict = {'title_id': '', 'primary_title': '', 'is_adult': 0,
                      'start_year': 0, 'runtime_minutes': 0, 'genres': [],
                      'directors': [], 'average_rating': 0, 'num_votes': 0}
@@ -98,11 +98,11 @@ def prepare_init_data(records_limit=10000):
     ratings.close()
     names.close()
 
-    command_file = open('init-db/init-db.js', 'w')
+    command_file = open('mongo-init.js', 'w')
     print('db.films.insertMany([', file=command_file)
     for film in films:  # to prettify
-        print(film, file=command_file)
-    print(']);', file=command_file)
+        print(film, ',', sep='', file=command_file)
+    print('])', file=command_file)
     command_file.close()
 
 
