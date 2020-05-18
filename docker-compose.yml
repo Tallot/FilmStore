@@ -1,0 +1,35 @@
+version: '3.1'
+
+services:
+    mongo-node1:
+        image: mongo:latest
+        hostname: mongo1
+        container_name: node1
+        restart: always
+        expose:
+            - 27017
+        ports:
+            - 27011:27017
+        entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0"]
+
+    mongo-node2:
+        image: mongo:latest
+        hostname: mongo2
+        container_name: node2
+        restart: always
+        expose:
+            - 27017
+        ports:
+            - 27012:27017
+        entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0"]
+
+    mongo-node3:
+        image: mongo:latest
+        hostname: mongo3
+        container_name: node3
+        restart: always
+        expose:
+            - 27017
+        ports:
+            - 27013:27017
+        entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0"]
