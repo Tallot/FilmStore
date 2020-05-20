@@ -1,7 +1,7 @@
 version: '3.1'
 
 services:
-    mongo-node1:
+    mongo_node1:
         image: mongo:latest
         hostname: mongo1
         container_name: node1
@@ -12,7 +12,7 @@ services:
             - 27011:27017
         entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0"]
 
-    mongo-node2:
+    mongo_node2:
         image: mongo:latest
         hostname: mongo2
         container_name: node2
@@ -23,7 +23,7 @@ services:
             - 27012:27017
         entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0"]
 
-    mongo-node3:
+    mongo_node3:
         image: mongo:latest
         hostname: mongo3
         container_name: node3

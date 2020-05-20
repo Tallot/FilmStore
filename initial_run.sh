@@ -1,5 +1,5 @@
 # run this after setting up the docker-compose
-docker-compose up -d
+docker-compose up -d --build
 sleep 1
 
 # this will initiate replica set for mongodb
