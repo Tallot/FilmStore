@@ -1,35 +1,65 @@
 version: '3.1'
 
 services:
-    mongo_node1:
+    mongo1:
         image: mongo:latest
-        hostname: mongo1
         container_name: node1
         restart: always
+        networks:
+            mongo_network:
+                ipv4_address: 172.21.0.11
         expose:
             - 27017
         ports:
             - 27011:27017
         entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0"]
 
-    mongo_node2:
+    mongo2:
         image: mongo:latest
-        hostname: mongo2
         container_name: node2
         restart: always
+        networks:
+            mongo_network:
+                ipv4_address: 172.21.0.12
         expose:
             - 27017
         ports:
             - 27012:27017
         entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0"]
 
-    mongo_node3:
+    mongo3:
         image: mongo:latest
-        hostname: mongo3
         container_name: node3
         restart: always
+        networks:
+            mongo_network:
+                ipv4_address: 172.21.0.13
         expose:
             - 27017
         ports:
             - 27013:27017
         entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0"]
+
+    inventory:
+        build:
+            context: inventory
+        image: djongo_app
+        container_name: inventory_service
+        restart: always
+        command: python manage.py runserver 0.0.0.0:8000
+        ports:
+            - 8000:8000
+        networks:
+            mongo_network:
+                ipv4_address: 172.21.0.2
+        depends_on:
+            - mongo1
+            - mongo2
+            - mongo3
+
+networks:
+    mongo_network:
+        ipam:
+            driver: default
+            config:
+                - subnet: "172.21.0.0/24"
