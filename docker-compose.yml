@@ -46,7 +46,6 @@ services:
         image: djongo_app
         container_name: inventory_service
         restart: always
-        command: python manage.py runserver 0.0.0.0:8000
         environment:
             DJANGO_SETTINGS_MODULE: inventory.settings
         ports:
