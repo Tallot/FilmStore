@@ -1,4 +1,4 @@
 tqdm
 djongo==1.2.30
-django==2.1.2
+django==2.2.10
 sqlparse==0.2.4
