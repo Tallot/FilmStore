@@ -1,3 +1,4 @@
 tqdm
 djongo==1.2.30
 django==2.1.2
+sqlparse==0.2.4

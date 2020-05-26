@@ -1,8 +1,9 @@
 # run this after setting up the docker-compose
+echo "DEPLOYING SYSTEM"
 docker-compose up -d --build
-sleep 1
 
 # this will initiate replica set for mongodb
+echo "Initiating MongoDB replica set"
 docker exec node1 mongo --eval "
 rs.initiate(
     {
@@ -15,3 +16,13 @@ rs.initiate(
     }
 )
 "
+sleep 2
+
+# initialize database and store some test data
+echo "Initializing database with test data..."
+docker exec inventory_service python manage.py makemigrations service_app
+sleep 2
+docker exec inventory_service python manage.py migrate
+sleep 3
+docker exec inventory_service python fill_db.py
+echo "SYSTEM ONLINE"

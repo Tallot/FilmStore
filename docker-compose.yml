@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
     mongo1:
-        image: mongo:latest
+        image: mongo:3.6
         container_name: node1
         restart: always
         networks:
@@ -15,7 +15,7 @@ services:
         entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0"]
 
     mongo2:
-        image: mongo:latest
+        image: mongo:3.6
         container_name: node2
         restart: always
         networks:
@@ -28,7 +28,7 @@ services:
         entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0"]
 
     mongo3:
-        image: mongo:latest
+        image: mongo:3.6
         container_name: node3
         restart: always
         networks:
@@ -47,6 +47,8 @@ services:
         container_name: inventory_service
         restart: always
         command: python manage.py runserver 0.0.0.0:8000
+        environment:
+            DJANGO_SETTINGS_MODULE: inventory.settings
         ports:
             - 8000:8000
         networks:

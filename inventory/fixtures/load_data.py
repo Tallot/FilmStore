@@ -1,7 +1,8 @@
 import os
 import csv
+import json
 import gzip
-import shutil
+import random
 import requests
 from tqdm import tqdm
 from pprint import pprint
@@ -72,19 +73,25 @@ def prepare_init_data(records_limit=10000):
             continue
 
         # future db collection
-        film_dict = {'title_id': '', 'primary_title': '', 'is_adult': 0,
+        film_dict = {'title_alphanum': '', 'primary_title': '', 'is_adult': False,
                      'start_year': 0, 'runtime_minutes': 0, 'genres': [],
-                     'directors': [], 'average_rating': 0, 'num_votes': 0}
+                     'directors': [], 'average_rating': 0.0, 'num_votes': 0}
 
-        film_dict['title_id'] = basics_row[0]
+        film_dict['title_alphanum'] = basics_row[0]
         film_dict['primary_title'] = basics_row[2]
-        film_dict['is_adult'] = basics_row[4]
-        film_dict['start_year'] = basics_row[5]
-        film_dict['runtime_minutes'] = basics_row[7]
+        if int(basics_row[4]) == 0:
+            film_dict['is_adult'] = False
+        else:
+            film_dict['is_adult'] = True
+        film_dict['start_year'] = int(basics_row[5])
+        if basics_row[7] == '\\N':
+            film_dict['runtime_minutes'] = random.randint(1, 10)
+        else:
+            film_dict['runtime_minutes'] = int(basics_row[7])
         film_dict['genres'] = basics_row[8].split(',')
 
-        film_dict['average_rating'] = ratings_row[1]
-        film_dict['num_votes'] = ratings_row[2]
+        film_dict['average_rating'] = float(ratings_row[1])
+        film_dict['num_votes'] = int(ratings_row[2])
 
         directors = crew_row[1].split(',')
 
@@ -98,12 +105,15 @@ def prepare_init_data(records_limit=10000):
     ratings.close()
     names.close()
 
-    command_file = open('mongo-init.js', 'w')
-    print('db.films.insertMany([', file=command_file)
-    for film in films:  # to prettify
-        print(film, ',', sep='', file=command_file)
-    print('])', file=command_file)
-    command_file.close()
+    with open('mongo_init_data.json', 'w') as fp:
+        json.dump(films, fp)
+
+    # command_file = open('mongo-init.js', 'w')
+    # print('db.films.insertMany([', file=command_file)
+    # for film in films:  # to prettify
+    #     print(film, ',', sep='', file=command_file)
+    # print('])', file=command_file)
+    # command_file.close()
 
 
 if __name__ == '__main__':
