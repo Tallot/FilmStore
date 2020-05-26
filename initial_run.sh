@@ -24,5 +24,6 @@ docker exec inventory_service python manage.py makemigrations service_app
 sleep 2
 docker exec inventory_service python manage.py migrate
 sleep 3
+docker exec inventory_service python manage.py collectstatic --noinput
 docker exec inventory_service python fill_db.py
 echo "SYSTEM ONLINE"
