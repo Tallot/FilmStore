@@ -14,5 +14,8 @@ class Film(models.Model):
 
     objects = models.DjongoManager()
 
+    def __str__(self):
+        return self.primary_title
+
     # class Meta:
     #    db_table = 'films'
