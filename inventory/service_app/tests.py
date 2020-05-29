@@ -37,7 +37,30 @@ class FilmTestCase(TestCase):
         response2 = self.client.post('/service_app/title/',
                                      {'primary_title': 'tEst_FilM'})
         result2 = json.loads(response2.content.decode('utf-8'))
+        # test exceptions
 
         self.assertEqual(len(result1['films']), 1)
         self.assertEqual(result1['films'][0]['primary_title'], 'test_film1')
         self.assertEqual(len(result2['films']), 2)
+
+    def test_get_filtered_films_view(self):
+        # test filtering functionality
+        response1 = self.client.post('/service_app/filter/',
+                                     {'filters': json.dumps({'is_adult': 'any',
+                                                             'start_year': 'any',
+                                                             'runtime_minutes': 'any',
+                                                             'genres': 'test_genre2',
+                                                             'directors': 'any',
+                                                             'average_rating': 'any'})})
+        result1 = json.loads(response1.content.decode('utf-8'))
+        self.assertEqual(len(result1['films']), 2)
+
+        response2 = self.client.post('/service_app/filter/',
+                                     {'filters': json.dumps({'is_adult': 'any',
+                                                             'start_year': 'any',
+                                                             'runtime_minutes': 'any',
+                                                             'genres': 'any',
+                                                             'directors': 'any',
+                                                             'average_rating': 'any'})})
+        result2 = json.loads(response2.content.decode('utf-8'))
+        self.assertEqual(result2['error'], 'at least one filter value must be set')
