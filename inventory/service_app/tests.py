@@ -72,3 +72,37 @@ class FilmTestCase(TestCase):
         self.assertEqual(result['success'], True)
         self.assertEqual(Film.objects.get(
             title_alphanum='tt0020001').average_rating, 8.804803493449782)
+
+        response2 = self.client.post('/service_app/vote/',
+                                     {'film_id': 'tt0020002', 'mark': 12.9})
+        result2 = json.loads(response2.content.decode('utf-8'))
+        self.assertEqual(result2['success'], False)
+
+    def test_insert_film_view(self):
+        correct_dict = {'title_alphanum': 'tt9999999',
+                        'primary_title': 'test_title999999',
+                        'is_adult': True,
+                        'start_year': 1289,
+                        'runtime_minutes': 13,
+                        'genres': ['gg'],
+                        'directors': ['wp', 'gl', 'hf'],
+                        'average_rating': 6.7,
+                        'num_votes': 1488}
+        incorrect_dict = {'title_alphanum': 'tt6666666',
+                          'primary_title': 'test_title666666',
+                          'is_adult': True,
+                          'start_year': 1289,
+                          'runtime_minutes': 13,
+                          'genres': ['gg'],
+                          'dictors': ['wp', 'gl', 'hf'],
+                          'average_rating': 6.7}
+
+        response = self.client.post('/service_app/insert/',
+                                    {'new_film': json.dumps(correct_dict)})
+        result = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(result['success'], True)
+
+        response2 = self.client.post('/service_app/insert/',
+                                     {'new_film': json.dumps(incorrect_dict)})
+        result2 = json.loads(response2.content.decode('utf-8'))
+        self.assertEqual(result2['success'], False)

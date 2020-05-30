@@ -71,6 +71,7 @@ def vote_for_film(request):
             film_id = request.POST.get('film_id')
             mark = request.POST.get('mark')
             mark = float(mark)
+            assert 0.0 <= mark <= 10.0, 'wrong range'
             obj = Film.objects.get(title_alphanum=film_id)
             old_rate, old_votes = obj.average_rating, obj.num_votes
             new_votes = old_votes + 1
@@ -79,5 +80,24 @@ def vote_for_film(request):
                                                                num_votes=new_votes)
             return JsonResponse({'success': True, 'error': None})
 
+        except Exception as ex:
+            return JsonResponse({'success': False, 'error': 'internal error'})
+
+
+def insert_film(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.POST.get('new_film'))
+            data_attribs = [key for key in data]
+            check_attribs = ['title_alphanum', 'primary_title',
+                             'is_adult', 'start_year', 'runtime_minutes',
+                             'genres',
+                             'directors', 'average_rating', 'num_votes']
+
+            assert data_attribs == check_attribs, 'Bad attributes'
+
+            new_film = Film(**data)
+            new_film.save()
+            return JsonResponse({'success': True, 'error': None})
         except Exception as ex:
             return JsonResponse({'success': False, 'error': 'internal error'})

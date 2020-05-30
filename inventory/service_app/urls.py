@@ -6,5 +6,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('title/', views.get_by_title, name='title'),
     path('filter/', views.get_filtered_films, name='filter'),
-    path('vote/', views.vote_for_film,  name='vote')
+    path('vote/', views.vote_for_film,  name='vote'),
+    path('insert/', views.insert_film, name='insert')
 ]
