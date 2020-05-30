@@ -54,7 +54,6 @@ def get_filtered_films(request):
             if all_any_flag:  # do not allow obtaining all the database
                 return JsonResponse({'success': False, 'error': 'at least one filter value must be set'})
 
-            print(conditions)
             results = Film.objects.filter(**conditions)
 
             if len(results) == 0:
@@ -67,4 +66,18 @@ def get_filtered_films(request):
 
 
 def vote_for_film(request):
-    pass
+    if request.method == 'POST':
+        try:
+            film_id = request.POST.get('film_id')
+            mark = request.POST.get('mark')
+            mark = float(mark)
+            obj = Film.objects.get(title_alphanum=film_id)
+            old_rate, old_votes = obj.average_rating, obj.num_votes
+            new_votes = old_votes + 1
+            new_rate = old_votes * old_rate / new_votes + mark/new_votes
+            Film.objects.filter(title_alphanum=film_id).update(average_rating=new_rate,
+                                                               num_votes=new_votes)
+            return JsonResponse({'success': True, 'error': None})
+
+        except Exception as ex:
+            return JsonResponse({'success': False, 'error': 'internal error'})

@@ -64,3 +64,11 @@ class FilmTestCase(TestCase):
                                                              'average_rating': 'any'})})
         result2 = json.loads(response2.content.decode('utf-8'))
         self.assertEqual(result2['error'], 'at least one filter value must be set')
+
+    def test_vote_for_film_view(self):
+        response = self.client.post('/service_app/vote/',
+                                    {'film_id': 'tt0020001', 'mark': 9.9})
+        result = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(result['success'], True)
+        self.assertEqual(Film.objects.get(
+            title_alphanum='tt0020001').average_rating, 8.804803493449782)
