@@ -106,3 +106,15 @@ class FilmTestCase(TestCase):
                                      {'new_film': json.dumps(incorrect_dict)})
         result2 = json.loads(response2.content.decode('utf-8'))
         self.assertEqual(result2['success'], False)
+
+    def test_enum_ids_view(self):
+        response = self.client.get('/service_app/enum/')
+        result = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(result['success'], True)
+
+    def test_get_by_id_view(self):
+        response = self.client.get('/service_app/id/',
+                                   {'film_id': 1})
+        result = json.loads(response.content.decode('utf-8'))
+        print(result)
+        self.assertEqual(result['success'], True)

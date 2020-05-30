@@ -89,9 +89,8 @@ def insert_film(request):
         try:
             data = json.loads(request.POST.get('new_film'))
             data_attribs = [key for key in data]
-            check_attribs = ['title_alphanum', 'primary_title',
-                             'is_adult', 'start_year', 'runtime_minutes',
-                             'genres',
+            check_attribs = ['title_alphanum', 'primary_title', 'is_adult',
+                             'start_year', 'runtime_minutes', 'genres',
                              'directors', 'average_rating', 'num_votes']
 
             assert data_attribs == check_attribs, 'Bad attributes'
@@ -99,5 +98,32 @@ def insert_film(request):
             new_film = Film(**data)
             new_film.save()
             return JsonResponse({'success': True, 'error': None})
+        except Exception as ex:
+            return JsonResponse({'success': False, 'error': 'internal error'})
+
+
+# Internal views
+def _enum_ids(request):
+    if request.method == 'GET':
+        try:
+            all_ids = Film.objects.values_list('pk')
+            all_ids = [fid[0] for fid in all_ids]
+
+            return JsonResponse({'success': True, 'error': None,
+                                 'ids': all_ids})
+        except Exception as ex:
+            return JsonResponse({'success': False, 'error': 'something went wrong'})
+
+
+def _get_by_id(request):
+    if request.method == 'GET':
+        try:
+            film_id = request.GET.get('film_id')
+            film_id = int(film_id)
+            film = Film.objects.filter(pk=film_id)
+            if len(film) == 0:
+                return JsonResponse({'success': True, 'error': None, 'film': {}})
+            else:
+                return JsonResponse({'success': True, 'error': None, 'film': film.values()[0]})
         except Exception as ex:
             return JsonResponse({'success': False, 'error': 'internal error'})
