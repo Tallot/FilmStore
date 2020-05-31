@@ -1,6 +1,10 @@
 # FilmStore
 System based on microservice architecture
 
+The overall architecture is depicted below:
+
+![Architecture](Architecture.jpg)
+
 ## Requirements
 
 Project depends on:
