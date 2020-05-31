@@ -18,6 +18,9 @@ def get_by_title(request):
                 return JsonResponse({'success': False, 'error': 'empty data'})
             # NOW: case insensitive search containing requested words
             # TODO: fuzzy string search
+            # https://medium.com/xeneta/fuzzy-search-with-mongodb-and-python-57103928ee5d
+            # https://stackoverflow.com/questions/5859561/getting-the-closest-string-match
+            # https://stackoverflow.com/questions/27977575/mongodb-approximate-string-matching
             film_objects = Film.objects.filter(primary_title__icontains=title)
             if len(film_objects) == 0:
                 return JsonResponse({'success': True, 'error': None, 'films': []})
