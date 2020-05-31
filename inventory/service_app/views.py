@@ -46,8 +46,6 @@ def get_filtered_films(request):
                         conditions[key+'__gte'] = val
                     elif key == 'genres':
                         conditions[key+'__contains'] = val
-                    elif key == 'directors':
-                        conditions[key+'__contains'] = val
                     else:
                         conditions[key] = val
 
@@ -70,14 +68,15 @@ def vote_for_film(request):
         try:
             film_id = request.POST.get('film_id')
             mark = request.POST.get('mark')
+            film_id = int(film_id)
             mark = float(mark)
             assert 0.0 <= mark <= 10.0, 'wrong range'
-            obj = Film.objects.get(title_alphanum=film_id)
+            obj = Film.objects.get(pk=film_id)
             old_rate, old_votes = obj.average_rating, obj.num_votes
             new_votes = old_votes + 1
             new_rate = old_votes * old_rate / new_votes + mark/new_votes
-            Film.objects.filter(title_alphanum=film_id).update(average_rating=new_rate,
-                                                               num_votes=new_votes)
+            Film.objects.filter(pk=film_id).update(average_rating=new_rate,
+                                                   num_votes=new_votes)
             return JsonResponse({'success': True, 'error': None})
 
         except Exception as ex:

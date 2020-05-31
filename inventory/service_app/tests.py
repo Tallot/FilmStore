@@ -50,7 +50,6 @@ class FilmTestCase(TestCase):
                                                              'start_year': 'any',
                                                              'runtime_minutes': 'any',
                                                              'genres': 'test_genre2',
-                                                             'directors': 'any',
                                                              'average_rating': 'any'})})
         result1 = json.loads(response1.content.decode('utf-8'))
         self.assertEqual(len(result1['films']), 2)
@@ -60,21 +59,20 @@ class FilmTestCase(TestCase):
                                                              'start_year': 'any',
                                                              'runtime_minutes': 'any',
                                                              'genres': 'any',
-                                                             'directors': 'any',
                                                              'average_rating': 'any'})})
         result2 = json.loads(response2.content.decode('utf-8'))
         self.assertEqual(result2['error'], 'at least one filter value must be set')
 
     def test_vote_for_film_view(self):
         response = self.client.post('/service_app/vote/',
-                                    {'film_id': 'tt0020001', 'mark': 9.9})
+                                    {'film_id': 12, 'mark': 9.9})
         result = json.loads(response.content.decode('utf-8'))
         self.assertEqual(result['success'], True)
         self.assertEqual(Film.objects.get(
-            title_alphanum='tt0020001').average_rating, 8.804803493449782)
+            pk=12).average_rating, 8.804803493449782)
 
         response2 = self.client.post('/service_app/vote/',
-                                     {'film_id': 'tt0020002', 'mark': 12.9})
+                                     {'film_id': 13, 'mark': 12.9})
         result2 = json.loads(response2.content.decode('utf-8'))
         self.assertEqual(result2['success'], False)
 
@@ -116,5 +114,4 @@ class FilmTestCase(TestCase):
         response = self.client.get('/service_app/id/',
                                    {'film_id': 1})
         result = json.loads(response.content.decode('utf-8'))
-        print(result)
         self.assertEqual(result['success'], True)
