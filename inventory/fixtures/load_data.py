@@ -40,7 +40,7 @@ def unpack(archive_names):
     print('Finised')
 
 
-def prepare_init_data(records_limit=10000):
+def prepare_init_data(records_limit=1000):
     print('Preparing data...')
     films = []
 
