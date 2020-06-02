@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">
+  Welcome, {{ name }}!
+   <br/>
+  Account balance: {{ cash }}
+  <br/>
+  How many cash you want to add:
+  <form method="POST" action="/add_cash">
+            <div class="field">
+                <div class="control">
+                    <input class="input small" type="text" name="cash_adding" placeholder="$" autofocus="">
+                </div>
+            </div>
+  </form>
+</h1>
+{% endblock %}
