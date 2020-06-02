@@ -1,0 +1,9 @@
+flask
+flask_login
+werkzeug
+flask_bootstrap
+flask_cors
+gevent
+requests
+flask_rabbitmq
+

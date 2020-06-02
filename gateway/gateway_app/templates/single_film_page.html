@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container has-text-left">
+<h1 class="title">
+    Title: {{ data.primary_title }}
+    <br>
+    Is adult: {% if data.primary_title %} Yes {%else%} No {%endif%}
+    <br>
+    Start year: {{ data.start_year }}
+    <br>
+    Minutes: {{ data.runtime_minutes }}
+    <br>
+    Genres: {%for el in data.genres%} {{el}} {% endfor %}
+    <br>
+    Directors: {%for el in data.directors%} {{el}} {% endfor %}
+    <br>
+    Average rating: {{data.average_rating}}
+    <br>
+    Votes: {{data.num_votes}}
+    <br>
+
+
+</h1>
+    <div class="container has-text-left">
+{% endblock %}
