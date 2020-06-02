@@ -5,4 +5,5 @@ flask_bootstrap
 flask_cors
 gevent
 requests
+flask_rabbitmq
 

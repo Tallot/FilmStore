@@ -58,7 +58,7 @@ services:
             - mongo2
             - mongo3
 
-    inventory:
+    gateway:
         build:
             context: gateway
         image: gateway_app
