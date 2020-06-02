@@ -20,6 +20,14 @@
     Votes: {{data.num_votes}}
     <br>
 
+    <form method="POST" action="/feedback/{{data.id}}">
+            <div class="field">
+                <div class="control">
+                    <input class="input" type="text" name="rating" placeholder="Rating" autofocus="">
+                </div>
+            </div>
+    </form>
+
 
 </h1>
     <div class="container has-text-left">
