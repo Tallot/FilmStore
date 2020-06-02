@@ -11,9 +11,9 @@ def index(request):
 
 
 def get_by_title(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         try:
-            title = request.POST.get('primary_title')
+            title = request.GET.get('primary_title')
             if title == '':
                 return JsonResponse({'success': False, 'error': 'empty data'})
             # NOW: case insensitive search containing requested words
@@ -33,9 +33,9 @@ def get_by_title(request):
 
 
 def get_filtered_films(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         try:
-            data = json.loads(request.POST.get('filters'))
+            data = json.loads(request.GET.get('filters'))
             conditions = {}
             if not isinstance(data, dict):
                 return JsonResponse({'success': False, 'error': 'wrong type of filters attribute'})
@@ -71,10 +71,10 @@ def get_filtered_films(request):
 
 
 def vote_for_film(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         try:
-            film_id = request.POST.get('film_id')
-            mark = request.POST.get('mark')
+            film_id = request.GET.get('film_id')
+            mark = request.GET.get('mark')
             film_id = int(film_id)
             mark = float(mark)
             assert 0.0 <= mark <= 10.0, 'wrong range'
@@ -91,9 +91,9 @@ def vote_for_film(request):
 
 
 def insert_film(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         try:
-            data = json.loads(request.POST.get('new_film'))
+            data = json.loads(request.GET.get('new_film'))
             data_attribs = [key for key in data]
             check_attribs = ['title_alphanum', 'primary_title', 'is_adult',
                              'start_year', 'runtime_minutes', 'genres',

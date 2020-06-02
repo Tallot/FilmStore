@@ -31,11 +31,11 @@ class FilmTestCase(TestCase):
 
     def test_get_by_title_view(self):
         # test case insensitive query by title of the film
-        response1 = self.client.post('/service_app/title/',
-                                     {'primary_title': 'Test_Film1'})
+        response1 = self.client.get('/service_app/title/',
+                                    {'primary_title': 'Test_Film1'})
         result1 = json.loads(response1.content.decode('utf-8'))
-        response2 = self.client.post('/service_app/title/',
-                                     {'primary_title': 'tEst_FilM'})
+        response2 = self.client.get('/service_app/title/',
+                                    {'primary_title': 'tEst_FilM'})
         result2 = json.loads(response2.content.decode('utf-8'))
         # test exceptions
 
@@ -45,34 +45,34 @@ class FilmTestCase(TestCase):
 
     def test_get_filtered_films_view(self):
         # test filtering functionality
-        response1 = self.client.post('/service_app/filter/',
-                                     {'filters': json.dumps({'is_adult': 'any',
-                                                             'start_year': 'any',
-                                                             'runtime_minutes': 'any',
-                                                             'genres': 'test_genre2',
-                                                             'average_rating': 'any'})})
+        response1 = self.client.get('/service_app/filter/',
+                                    {'filters': json.dumps({'is_adult': 'any',
+                                                            'start_year': 'any',
+                                                            'runtime_minutes': 'any',
+                                                            'genres': 'test_genre2',
+                                                            'average_rating': 'any'})})
         result1 = json.loads(response1.content.decode('utf-8'))
         self.assertEqual(len(result1['films']), 2)
 
-        response2 = self.client.post('/service_app/filter/',
-                                     {'filters': json.dumps({'is_adult': 'any',
-                                                             'start_year': 'any',
-                                                             'runtime_minutes': 'any',
-                                                             'genres': 'any',
-                                                             'average_rating': 'any'})})
+        response2 = self.client.get('/service_app/filter/',
+                                    {'filters': json.dumps({'is_adult': 'any',
+                                                            'start_year': 'any',
+                                                            'runtime_minutes': 'any',
+                                                            'genres': 'any',
+                                                            'average_rating': 'any'})})
         result2 = json.loads(response2.content.decode('utf-8'))
         self.assertEqual(result2['error'], 'at least one filter value must be set')
 
     def test_vote_for_film_view(self):
-        response = self.client.post('/service_app/vote/',
-                                    {'film_id': 12, 'mark': 9.9})
+        response = self.client.get('/service_app/vote/',
+                                   {'film_id': 12, 'mark': 9.9})
         result = json.loads(response.content.decode('utf-8'))
         self.assertEqual(result['success'], True)
         self.assertEqual(Film.objects.get(
             pk=12).average_rating, 8.804803493449782)
 
-        response2 = self.client.post('/service_app/vote/',
-                                     {'film_id': 13, 'mark': 12.9})
+        response2 = self.client.get('/service_app/vote/',
+                                    {'film_id': 13, 'mark': 12.9})
         result2 = json.loads(response2.content.decode('utf-8'))
         self.assertEqual(result2['success'], False)
 
@@ -95,13 +95,13 @@ class FilmTestCase(TestCase):
                           'dictors': ['wp', 'gl', 'hf'],
                           'average_rating': 6.7}
 
-        response = self.client.post('/service_app/insert/',
-                                    {'new_film': json.dumps(correct_dict)})
+        response = self.client.get('/service_app/insert/',
+                                   {'new_film': json.dumps(correct_dict)})
         result = json.loads(response.content.decode('utf-8'))
         self.assertEqual(result['success'], True)
 
-        response2 = self.client.post('/service_app/insert/',
-                                     {'new_film': json.dumps(incorrect_dict)})
+        response2 = self.client.get('/service_app/insert/',
+                                    {'new_film': json.dumps(incorrect_dict)})
         result2 = json.loads(response2.content.decode('utf-8'))
         self.assertEqual(result2['success'], False)
 
