@@ -25,7 +25,9 @@ def get_by_title(request):
             if len(film_objects) == 0:
                 return JsonResponse({'success': True, 'error': None, 'films': []})
             else:
-                return JsonResponse({'success': True, 'error': None, 'films': list(film_objects.values())})
+                film_objects = list(film_objects.values())
+                return JsonResponse({'success': True, 'error': None,
+                                     'films': [{'id': d['id'], 'primary_title':d['primary_title']} for d in film_objects]})
         except Exception as ex:
             return JsonResponse({'success': False, 'error': 'missing title attribute'})
 
@@ -60,7 +62,9 @@ def get_filtered_films(request):
             if len(results) == 0:
                 return JsonResponse({'success': True, 'error': None, 'films': []})
             else:
-                return JsonResponse({'success': True, 'error': None, 'films': list(results.values())})
+                results = list(results.values())
+                return JsonResponse({'success': True, 'error': None,
+                                     'films': [{'id': d['id'], 'primary_title':d['primary_title']} for d in results]})
 
         except Exception as ex:
             return JsonResponse({'success': False, 'error': 'wrong filters attribute(s)'})
