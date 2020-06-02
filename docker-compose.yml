@@ -46,6 +46,8 @@ services:
         image: djongo_app
         container_name: inventory_service
         restart: always
+        expose:
+            - 8000
         environment:
             DJANGO_SETTINGS_MODULE: inventory.settings
         ports:
@@ -64,8 +66,15 @@ services:
         image: gateway_app
         container_name: gateway_service
         restart: always
+        expose:
+            - 5000
         ports:
             - 8001:5000
+        links:
+            - inventory
+        networks:
+            mongo_network:
+                ipv4_address: 172.21.0.3
 
 networks:
     mongo_network:

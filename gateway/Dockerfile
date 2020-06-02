@@ -9,4 +9,6 @@ RUN apt-get update \
 COPY . /root/project
 RUN pip3 install -r /root/project/requirements.txt
 WORKDIR /root/project/gateway_app
+EXPOSE 5000
 CMD ["python3", "running.py"]
+
