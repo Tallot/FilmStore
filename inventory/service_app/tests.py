@@ -48,11 +48,11 @@ class FilmTestCase(TestCase):
         response1 = self.client.get('/service_app/filter/',
                                     {'filters': json.dumps({'is_adult': 'any',
                                                             'start_year': 'any',
-                                                            'runtime_minutes': 'any',
+                                                            'runtime_minutes': 'wtf',
                                                             'genres': 'test_genre2',
                                                             'average_rating': 'any'})})
         result1 = json.loads(response1.content.decode('utf-8'))
-        self.assertEqual(len(result1['films']), 2)
+        self.assertEqual(len(result1['films']), 0)
 
         response2 = self.client.get('/service_app/filter/',
                                     {'filters': json.dumps({'is_adult': 'any',
@@ -108,6 +108,7 @@ class FilmTestCase(TestCase):
     def test_enum_ids_view(self):
         response = self.client.get('/service_app/enum/')
         result = json.loads(response.content.decode('utf-8'))
+        print(result)
         self.assertEqual(result['success'], True)
 
     def test_get_by_id_view(self):

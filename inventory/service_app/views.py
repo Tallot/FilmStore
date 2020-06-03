@@ -55,7 +55,7 @@ def get_filtered_films(request):
                         conditions[key] = val
 
             if all_any_flag:  # do not allow obtaining all the database
-                return JsonResponse({'success': False, 'error': 'at least one filter value must be set'})
+                return JsonResponse({'success': False, 'error': 'at least one filter value must be set', 'films': []})
 
             results = Film.objects.filter(**conditions)
 
@@ -67,7 +67,7 @@ def get_filtered_films(request):
                                      'films': [{'id': d['id'], 'primary_title':d['primary_title']} for d in results]})
 
         except Exception as ex:
-            return JsonResponse({'success': False, 'error': 'wrong filters attribute(s)'})
+            return JsonResponse({'success': False, 'error': 'wrong filters attribute(s)', 'films': []})
 
 
 def vote_for_film(request):

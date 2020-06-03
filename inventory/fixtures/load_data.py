@@ -75,7 +75,8 @@ def prepare_init_data(records_limit=1000):
         # future db collection
         film_dict = {'title_alphanum': '', 'primary_title': '', 'is_adult': False,
                      'start_year': 0, 'runtime_minutes': 0, 'genres': [],
-                     'directors': [], 'average_rating': 0.0, 'num_votes': 0}
+                     'directors': [], 'average_rating': 0.0, 'num_votes': 0,
+                     'price': 0}
 
         film_dict['title_alphanum'] = basics_row[0]
         film_dict['primary_title'] = basics_row[2]
@@ -92,6 +93,7 @@ def prepare_init_data(records_limit=1000):
 
         film_dict['average_rating'] = float(ratings_row[1])
         film_dict['num_votes'] = int(ratings_row[2])
+        film_dict['price'] = random.randint(15, 100)
 
         directors = crew_row[1].split(',')
 

@@ -11,6 +11,7 @@ class Film(models.Model):
     directors = models.ListField(default=[])
     average_rating = models.FloatField()
     num_votes = models.IntegerField(default=0)
+    price = models.FloatField()
 
     objects = models.DjongoManager()
 
