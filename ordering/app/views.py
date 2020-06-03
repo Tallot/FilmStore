@@ -1,5 +1,4 @@
 import db
-import aiosqlite
 import requests
 import json
 import sqlite3
@@ -8,6 +7,12 @@ import settings
 import hazelcast
 from aiohttp import web
 from db import commit_txn, get_user_films
+
+config = hazelcast.ClientConfig()
+config.network_config.addresses.append(settings.hazelcast_ip)
+hz = hazelcast.HazelcastClient(config=config)
+
+stat_storage = hz.get_map("stat_storage")
 
 
 async def index(request):
@@ -37,8 +42,6 @@ async def buy(request):
                 # Request to Accounting Service
                 # --account.cash
                 # ++user.film
-                # Request to Inventory
-                # --film
                 stat_storage.lock()
                 for film in resp['films']:
                     value = stat_storage.get(film['id'])
@@ -55,11 +58,10 @@ async def buy(request):
 async def popular(request):
     n = request.match_info.get('n')
 
-    popular = []
     max_el = 0
     stat_storage.lock()
     local_map = stat_storage.get_map()
-    highest = dict(sorted(A.iteritems(), key=operator.itemgetter(1), reverse=True)[:n])
+    highest = dict(sorted(local_map.iteritems(), key=local_map.itemgetter(1), reverse=True)[:n])
     stat_storage.unlock()
 
     return web.json_response({'success': True, 'data': highest})

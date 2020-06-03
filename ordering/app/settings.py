@@ -5,5 +5,5 @@ inventory_service_addr = 'http://172.21.0.2:8000/service_app'
 
 accounting_service_addr = ''
 
-hazelcast_ip = ''
+hazelcast_ip = '172.21.0.14:5701'
 
