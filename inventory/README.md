@@ -16,7 +16,8 @@ runtime_minutes: <:int>,
 genres: <:list:string>,
 directors: <:list:string>,
 average_rating: <:float>,
-num_votes: <:int>
+num_votes: <:int>,
+price: <:float>
 }
 ```
 
