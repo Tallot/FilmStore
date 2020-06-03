@@ -42,7 +42,7 @@ response format:
 `{success: <:boolean>, error: <:string>, ids: <:list:int>}`
 
 - get_by_title(_request_) <br />
-method: `POST` <br />
+method: `GET` <br />
 address: `/service_app/title/` <br />
 request format:
 `{primary_title: <:string>}` <br />
@@ -50,7 +50,7 @@ response format:
 `{success: <:boolean>, error: <:string>, films: <:list:dict>}`
 
 - get_filtered_films(_request_) <br />
-method: `POST` <br />
+method: `GET` <br />
 address: `/service_app/filter/` <br />
 request format:
 ```
@@ -64,7 +64,7 @@ response format:
 `{success: <:boolean>, error: <:string>, films: <:list:dict>}`
 
 - vote_for_film(_request_) <br />
-method: `POST` <br />
+method: `GET` <br />
 address: `/service_app/vote/` <br />
 request format:
 `{film_id: <:int>, mark: <:float>}` <br />
