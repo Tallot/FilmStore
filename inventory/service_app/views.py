@@ -112,11 +112,11 @@ def insert_film(request):
 def _enum_ids(request):
     if request.method == 'GET':
         try:
-            all_ids = Film.objects.values_list('pk')
-            all_ids = [fid[0] for fid in all_ids]
+            all_films = Film.objects.all()
+            all_films = list(all_films.values())
 
             return JsonResponse({'success': True, 'error': None,
-                                 'ids': all_ids})
+                                 'ids': all_films})
         except Exception as ex:
             return JsonResponse({'success': False, 'error': 'something went wrong'})
 

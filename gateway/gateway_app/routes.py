@@ -7,6 +7,7 @@ main = Blueprint('routes', __name__)
 import json
 film_service_url = "http://172.21.0.2:8000/service_app/"
 users_url = "http://172.21.0.4:5000/"
+recomm_url = "http://172.21.0.6:5000/"
 
 @main.route('/')
 def index():
@@ -15,7 +16,9 @@ def index():
 @main.route('/recommendations')
 @login_required
 def recommendations():
-    return "RECOMMENDATIONS"
+    req_url = recomm_url + "get_recommendations"
+    resp = requests.get(req_url, json={"user_id":current_user.id}).json()["recommend"]
+    return render_template("films_list.html",data = resp,enumerate=enumerate)
 
 @main.route('/film_search')
 @login_required

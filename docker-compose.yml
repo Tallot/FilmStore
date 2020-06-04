@@ -122,6 +122,26 @@ services:
             mongo_network:
                 ipv4_address: 172.21.0.4
 
+
+    recommendations:
+        build:
+            context: recommendations
+        image: recom_app
+        container_name: recom_service
+        restart: always
+        expose:
+            - 5000
+        ports:
+            - 8004:5000
+        links:
+            - inventory
+            - gateway
+        networks:
+            mongo_network:
+                ipv4_address: 172.21.0.6
+
+
+
 networks:
     mongo_network:
         ipam:
