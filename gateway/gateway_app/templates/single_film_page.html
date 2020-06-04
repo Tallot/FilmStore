@@ -2,6 +2,14 @@
 
 {% block content %}
 <div class="container has-text-left">
+    <form method="POST" action="/buy/{{data.id}}">
+            <div class="field">
+                <div class="control">
+                    <button class="button is-primary is-inverted is-outlined" name="buy_but">Purchase</button>
+                </div>
+            </div>
+    </form>
+    <br>
 <h1 class="title">
     Title: {{ data.primary_title }}
     <br>
@@ -19,6 +27,7 @@
     <br>
     Votes: {{data.num_votes}}
     <br>
+    <br>
 
     <form method="POST" action="/feedback/{{data.id}}">
             <div class="field">
@@ -27,7 +36,6 @@
                 </div>
             </div>
     </form>
-
 
 </h1>
     <div class="container has-text-left">

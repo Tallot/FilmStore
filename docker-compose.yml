@@ -140,6 +140,12 @@ services:
             mongo_network:
                 ipv4_address: 172.21.0.6
 
+    rabbitmq:
+        image: 'rabbitmq:3.6-management-alpine'
+        ports:
+          - '5672:5672'
+          - '15672:15672'
+
 
 
 networks:

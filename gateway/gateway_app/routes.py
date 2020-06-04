@@ -58,6 +58,20 @@ def feedback(film_id):
         return render_template("thank_feedback.html", text="Only int or float,not string,idiot")
 
 
+@main.route('/buy/<film_id>',methods=["POST"])
+@login_required
+def buy(film_id):
+    #rating = float(request.form.get("rating"))
+    #req_url = film_service_url + "vote"
+    #req_dict = {"film_id": int(film_id),"mark":rating}
+    #resp = requests.get(req_url, req_dict).json()
+    print("Film id {} and user id {}".format(film_id,current_user.id))
+    #if resp["success"]:
+        #return render_template("thank_feedback.html",text="Thank you for feedback")
+    #else:
+    return render_template("thank_feedback.html", text="Thanks for buying film!")
+
+
 @main.route('/find_film_by_name')
 @login_required
 def find_film_by_name():
