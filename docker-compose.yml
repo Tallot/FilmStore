@@ -41,7 +41,7 @@ services:
         entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0"]
 
     hz1:
-        image: hazelcast/hazelcast
+        image: hazelcast/hazelcast:3.12
         container_name: hz_node1
         restart: always
         networks:
@@ -51,7 +51,7 @@ services:
             - 5701
         ports:
             - 5701:5701
-        entrypoint: []
+        entrypoint: [ 'JAVA_OPTS="-Dhazelcast.local.publicAddress=0.0.0.0:5701"' '-p 5701:5701' 'hazelcast/hazelcast:3.12' ]
 
     inventory:
         build:

@@ -16,7 +16,7 @@ stat_storage = hz.get_map("stat_storage")
 
 
 async def index(request):
-    return web.json_response({'succcess': 'ok'})
+    return web.json_response({'succcess': True})
 
 
 async def get_user_films(request):
@@ -36,18 +36,19 @@ async def buy(request):
         for item in prod_titles:
             # Request to Inventory Service
             payload = {'primary_title': item}
-            resp = requests.get(f'{settings.inventory_service_addr}/primary_title', params=payload)
+            resp = await requests.get(f'{settings.inventory_service_addr}/primary_title', params=payload)
             resp_json = resp.json()
             if resp_json['success']:
+                for item in resp_json['films']:
+                    film_id = item['id']
+                    film_resp = await requests.get(f'{settings.inventory_service_addr}/id', params={'film_id': film_id})
+                film_price = film_resp.json()['film']['price']
                 # Request to Accounting Service
-                # --account.cash
-                # ++user.film
-                stat_storage.lock()
-                for film in resp['films']:
-                    value = stat_storage.get(film['id'])
-                    # Default value = 100. need to get it from api
-                    stat_storage.put(film['id'], value + 100)
-                stat_storage.unlock()
+                resp  = await requests.post(f'{settings.accounting_service_addr}/buy',
+                        json={'id': film_id, 'cost': film_price})
+                stat_storage.lock('buy_lock')
+                stat_storage.put(film_id, stat_storage.get(film_id).result() + film_price)
+                stat_storage.unlock('buy_lock')
             else:
                 raise Exception('Could not fetch inventory data')
         return web.json_response({'success': True})
@@ -59,11 +60,13 @@ async def popular(request):
     n = request.match_info.get('n')
 
     max_el = 0
-    stat_storage.lock()
-    local_map = stat_storage.get_map()
-    highest = dict(sorted(local_map.iteritems(), key=local_map.itemgetter(1), reverse=True)[:n])
-    stat_storage.unlock()
-
+    local_map = {}
+    stat_storage.lock('popular_lock')
+    for key, value in stat_storage.entry_set().result():
+        local_map[key] = value
+    stat_storage.unlock('popular_lock') 
+    highest = sorted(local_map, key=local_map.get, reverse=True)[:n]
+    
     return web.json_response({'success': True, 'data': highest})
 
     
