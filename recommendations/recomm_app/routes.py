@@ -30,5 +30,3 @@ def get_recommendations():
     recomm = requests.get(film_service_url+"enum").json()["ids"]
     recomm = make_rec(user_id,recomm)
     return jsonify({"recommend": recomm,"success":True})
-
-
