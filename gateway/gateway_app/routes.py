@@ -7,6 +7,7 @@ main = Blueprint('routes', __name__)
 import json
 film_service_url = "http://172.21.0.2:8000/service_app/"
 users_url = "http://172.21.0.4:5000/"
+order_url = "http://172.21.0.5:8080/"
 recomm_url = "http://172.21.0.6:5000/"
 
 @main.route('/')
@@ -51,7 +52,7 @@ def feedback(film_id):
     rating = float(request.form.get("rating"))
     req_url = film_service_url + "vote"
     req_dict = {"film_id": int(film_id),"mark":rating}
-    resp = requests.get(req_url, req_dict).json()
+    resp = requests.get(req_url, req_dict,timeout=60.0).json()
     if resp["success"]:
         return render_template("thank_feedback.html",text="Thank you for feedback")
     else:
@@ -61,15 +62,13 @@ def feedback(film_id):
 @main.route('/buy/<film_id>',methods=["POST"])
 @login_required
 def buy(film_id):
-    #rating = float(request.form.get("rating"))
-    #req_url = film_service_url + "vote"
-    #req_dict = {"film_id": int(film_id),"mark":rating}
-    #resp = requests.get(req_url, req_dict).json()
     print("Film id {} and user id {}".format(film_id,current_user.id))
-    #if resp["success"]:
-        #return render_template("thank_feedback.html",text="Thank you for feedback")
+    #resp = requests.get(order_url+"buy/"+str(current_user.id), json={'items': film_id}).json()
+    resp = requests.get(users_url+"buy",json={'id': current_user.id, 'cost': 100}).json()
+    if resp["success"]:
+        return render_template("thank_feedback.html",text="Thank you for buying film!")
     #else:
-    return render_template("thank_feedback.html", text="Thanks for buying film!")
+    return render_template("thank_feedback.html", text="Sory,error occured(need more cash maybe)")
 
 
 @main.route('/find_film_by_name')

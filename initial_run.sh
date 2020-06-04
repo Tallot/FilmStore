@@ -23,6 +23,7 @@ echo "Initializing database with test data..."
 docker exec inventory_service python manage.py makemigrations service_app
 sleep 2
 docker exec inventory_service python manage.py migrate
+docker exec -e JAVA_OPTS="-Dhazelcast.local.publicAddress=172.21.0.14:5701" -p 5701:5701 hazelcast/hazelcast:3.12
 sleep 3
 docker exec inventory_service python manage.py collectstatic --noinput
 docker exec inventory_service python fill_db.py

@@ -51,7 +51,6 @@ services:
             - 5701
         ports:
             - 5701:5701
-        entrypoint: [ 'JAVA_OPTS="-Dhazelcast.local.publicAddress=0.0.0.0:5701"' '-p 5701:5701' 'hazelcast/hazelcast:3.12' ]
 
     inventory:
         build:
@@ -88,6 +87,8 @@ services:
         networks:
             mongo_network:
                 ipv4_address: 172.21.0.5
+        depends_on:
+            - hz1
 
     gateway:
         build:
