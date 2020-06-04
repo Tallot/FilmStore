@@ -1,0 +1,9 @@
+flask
+flask_cors
+gevent
+flask_sqlalchemy
+flask_script
+flask_migrate
+requests
+flask_bootstrap
+psycopg2-binary

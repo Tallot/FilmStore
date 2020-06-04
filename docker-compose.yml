@@ -38,7 +38,7 @@ services:
             - 27017
         ports:
             - 27013:27017
-        entrypoint: []
+        entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0"]
 
     hz1:
         image: hazelcast/hazelcast
@@ -82,12 +82,12 @@ services:
         expose:
             - 8080
         ports:
-            - 8080:8080
+            - 8003:8080
         links:
             - inventory
         networks:
             mongo_network:
-                ipv4_address: 172.21.0.3
+                ipv4_address: 172.21.0.5
 
     gateway:
         build:
@@ -104,6 +104,23 @@ services:
         networks:
             mongo_network:
                 ipv4_address: 172.21.0.3
+
+    users:
+        build:
+            context: users
+        image: users_app
+        container_name: users_service
+        restart: always
+        expose:
+            - 5000
+        ports:
+            - 8002:5000
+        links:
+            - inventory
+            - gateway
+        networks:
+            mongo_network:
+                ipv4_address: 172.21.0.4
 
 networks:
     mongo_network:

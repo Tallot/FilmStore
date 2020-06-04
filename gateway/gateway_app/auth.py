@@ -1,21 +1,21 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 #import rabbitmq
 auth = Blueprint('auth', __name__)
-from flask_login import login_user
+from flask_login import login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_cors import cross_origin
 import requests
 import os
 import flask_rabbitmq
+import hashlib
 from models import User
-
-def make_rec(user_id,full_film_db):
-    pass
+users_url = "http://172.21.0.4:5000/"
 
 
 @auth.route('/login', methods=["GET"])
 def login():
+    logout_user()
     return render_template("login.html")
 
 
@@ -24,15 +24,19 @@ def login_post():
     print("here")
     email = request.form.get('email')
     password = request.form.get('password')
+    hash_pass = hashlib.md5(password.encode()).hexdigest()
     remember = True if request.form.get('remember') else False
-
-    # Реквест до Каті, єслі ок - вертає юзер айді i юзернейм,єслі нєт - вертає флаг "error"=True
-    #user = User.query.filter_by(email=email).first()
-
+    req_url = users_url + "signin"
+    req_dict = {"mail": email,"password":hash_pass}
+    resp = requests.get(req_url, json=req_dict).json()
+    print(resp)
     # DB QUERY FOR USER
     # user - побудуємо якщо катя вернула ок
-    user = User(1,"mail.com","1234","Max",cash=100)
-    # IF USER NOT NONE - return user mail and hash_pass
+    user = None
+    try:
+        user = User(resp["id"],resp["mail"],hash_pass,resp["name"],resp["cash"])
+    except:
+        print("User not complete")
 
     if not user: #or not check_password_hash(user.password, password):
         flash('Please check your login details and try again.')
@@ -45,18 +49,23 @@ def login_post():
 
 @auth.route('/signup')
 def signup():
+    logout_user()
     return render_template("signup.html")
 
 @auth.route('/signup', methods=["POST"])
 def signup_post():
+
     email = request.form.get('email')
     name = request.form.get('name')
     password = request.form.get('password')
-    hash_pass = generate_password_hash(password, method='sha256')
-    # Отправляю Каті email,name,hash_pass - отримую або айді чєла,або то шо мейл вже існує(поле exist=True)
-
-    exist = False
-
+    hash_pass = hashlib.md5(password.encode()).hexdigest()
+    req_url = users_url + "signup"
+    req_dict = {"mail": email, "password": hash_pass,"name":name}
+    resp = requests.get(req_url, json=req_dict).json()
+    if resp["error"]:
+        exist = True
+    else:
+        exist = False
 
     if exist:  # if a user is found, we want to redirect back to signup page so user can try again
         flash("Already exist")
@@ -73,5 +82,7 @@ def signup_post():
     return redirect(url_for('auth.login'))
 
 @auth.route('/logout')
+@login_required
 def logout():
+    logout_user()
     return render_template("login.html")
